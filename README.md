@@ -1,3 +1,3 @@
 # TimeTabler
 
-Why waste hours when Timetabler can make the time table for the all the teacher in a click.
+Why waste hours when Timetabler can make a time table in a click.

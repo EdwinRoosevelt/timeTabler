@@ -1,5 +1,6 @@
-:root {
+* {
 	font-family: "Comfortaa", cursive;
+	font-size: 0.9rem;
 }
 
 input,
@@ -11,6 +12,10 @@ select {
 	height: fit-content;
 	margin-top: auto;
 	margin-bottom: auto;
+}
+
+#p {
+	font-size: 2rem;
 }
 
 .btn {
@@ -27,4 +32,31 @@ select {
 	border-radius: 0;
 	border-top-left-radius: 40px;
 	border-bottom-left-radius: 40px;
+}
+
+.bg-done {
+	background: linear-gradient(to left, #ff9966, #ff5e62);
+	color: white;
+}
+
+.bg-red {
+	background: linear-gradient(to left, #cb356b, #bd3f32);
+	color: white;
+}
+
+.bg-green {
+	background: linear-gradient(to left, #1e5006, #0f9b0f);
+	color: white;
+}
+
+.bg-blue {
+	background: linear-gradient(to left, #36d1dc, #5b86e5);
+}
+
+.fs-10 {
+	font-size: 0.9rem;
+}
+
+.btn:hover {
+	box-shadow: 0 0 5px rgb(46, 45, 45);
 }
