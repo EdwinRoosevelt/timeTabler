@@ -18,7 +18,7 @@ export default function Home() {
 					<hr></hr>
 					<p>
 						Made by{" "}
-						<a href="https:www.edwinroosevelt.com" target="_blank" rel="noreferer">
+						<a href="https:www.edwinroosevelt.com" target="_blank" rel="noreferrer">
 							Edwin Roosevelt
 						</a>
 					</p>
