@@ -1,0 +1,30 @@
+:root {
+	font-family: "Comfortaa", cursive;
+}
+
+input,
+select {
+	border-radius: 5px;
+	object-fit: contain;
+	border: 1px solid rgb(210, 210, 210);
+	padding: 0.4rem 0.5rem;
+	height: fit-content;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.btn {
+	border-radius: 40px;
+}
+
+.btn-right {
+	border-radius: 0;
+	border-top-right-radius: 40px;
+	border-bottom-right-radius: 40px;
+}
+
+.btn-left {
+	border-radius: 0;
+	border-top-left-radius: 40px;
+	border-bottom-left-radius: 40px;
+}
