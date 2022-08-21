@@ -240,7 +240,7 @@ function MainPage() {
 					marginRight: "auto",
 				}}
 			>
-				<div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div>
+				{/* <div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div> */}
 
 				<div className="container my-3  gap-3 d-flex flex-wrap justify-content-around">
 					<div>
@@ -430,7 +430,7 @@ function MainPage() {
 						</p>
 					</div>
 				</div>
-				<div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div>
+				{/* <div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div> */}
 
 				{table && (
 					<>
