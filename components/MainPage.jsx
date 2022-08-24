@@ -4,6 +4,7 @@ import { generateTimeTable } from "../logic";
 
 // import { ButtonGroup, Button, TextField } from "@mui/material";
 import { CONSTRAINDATA, TEACHERSDATA } from "../logic/data";
+import Modal from "./Modal";
 
 const WEEEKDAYS = [
 	"Monday",
@@ -205,6 +206,7 @@ function MainPage() {
 			constrainData
 		);
 		setTable(table);
+		setShowModal(true);
 	};
 
 	const deleteIcon = (
@@ -224,9 +226,27 @@ function MainPage() {
 		</svg>
 	);
 
+	// useEffect(() => {
+	// 	if (typeof window !== undefined) {
+	// 		(adsgoogle = window.adsgoogle || []).push({});
+	// 	}
+	// }, []);
+
+	const [showModal, setShowModal] = useState(false);
+
+	const handleModalClose = () => {
+		setShowModal(false);
+	};
+
 	return (
 		<>
-			<div className="container text-center p-3 my-3">
+			<Modal
+				show={showModal}
+				closeModal={handleModalClose}
+				table={table}
+				generalData={generalData}
+			/>
+			<div className="container text-center p-3 mb-3">
 				<h1 className="display-3">TimeTabler</h1>
 				<p>2 minutes time tables</p>
 			</div>
@@ -240,9 +260,16 @@ function MainPage() {
 					marginRight: "auto",
 				}}
 			>
-				{/* <div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div> */}
+				{/* <div
+					className="bg-light border text-center my-3 mx-3 p-5 adsbygoogle"
+					data-ad-client="ca-ca-pub-2846658205429325"
+					data-ad-slot="2846658205429325"
+					data-ad-format="auto"
+				>
+					Google Ads
+				</div> */}
 
-				<div className="container my-3  gap-3 d-flex flex-wrap justify-content-around">
+				<div className="container my-3  gap-3 d-flex  justify-content-around">
 					<div>
 						<p>No of days / week</p>
 						<input
@@ -265,21 +292,20 @@ function MainPage() {
 							onChange={changeGeneralInfo}
 						/>
 					</div>
-					<button className="btn bg-done w-25" onClick={handleGenerate}>
-						Generate
-					</button>
 				</div>
 
-				<div className="row mx-2">
-					<div className="col-md-6">
+				<div className="row flex-nowrap mx-1" style={{ overflowX: "scroll" }}>
+					<div className="" style={{ maxWidth: "500px" }}>
 						<h1 className="fs-2 p-3">Teachers</h1>
 						<div
 							style={{
 								overflowY: "scroll",
-								height: "500px",
+								height: "400px",
+								// maxHeight: "400px",
 								border: "1px dotted grey",
 								scrollbarWidth: "thin",
 								scrollbarColor: "rebeccapurple green",
+								padding: "0.5rem",
 							}}
 						>
 							<div className="d-flex gap-2 flex-wrap p-2">
@@ -343,20 +369,37 @@ function MainPage() {
 										</button>
 									</div>
 								))}
+								<div
+									className="w-100"
+									style={{
+										border: "1px dashed green",
+										height: "70px",
+										color: "green",
+										margin: "auto",
+										textAlign: "center",
+										lineHeight: "70px",
+										// background:
+										// 	"repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 10px)",
+										// background: "rgba(255, 255, 255, 0.5)",
+									}}
+									onClick={addTeacher}
+								>
+									<p>Add Teacher</p>
+									{/* Add Teacher */}
+								</div>
 							</div>
 						</div>
-						<button className="btn bg-green w-100 mt-2" onClick={addTeacher}>
-							Add Teacher
-						</button>
+						{/* <button className="btn bg-green w-100 mt-2">Add Teacher</button> */}
 					</div>
-					<div className="col-md-6">
+					<div className="" style={{ maxWidth: "500px" }}>
 						<h1 className="fs-2 p-3">Constrains</h1>
 						<div
 							className="p-3"
 							style={{
 								overflowY: "scroll",
-								height: "500px",
+								height: "400px",
 								border: "1px dotted grey",
+								padding: "0.5rem",
 							}}
 						>
 							{constrainData.map((classSub) => (
@@ -374,8 +417,8 @@ function MainPage() {
 										</div>
 									</div>
 
+									<p className="m-0">Periods can be filled on :</p>
 									<div className="d-flex justify-content-between">
-										<p className="m-0 py-3">Filled on :</p>
 										<p className=" m-0 py-3 w-auto px-2">Days</p>
 										<input
 											id={classSub.id}
@@ -397,9 +440,8 @@ function MainPage() {
 											onChange={changeConstrainData}
 										/>
 									</div>
-
+									<p className="m-0 mt-2">Sessions per :</p>
 									<div className="d-flex justify-content-between">
-										<p className="m-0 py-3">Sessions per :</p>
 										<p className=" m-0 py-3 w-auto px-2">week</p>
 										<input
 											id={classSub.id}
@@ -430,9 +472,15 @@ function MainPage() {
 						</p>
 					</div>
 				</div>
+				<div className="p-3">
+					<button className="btn bg-done w-100" onClick={handleGenerate}>
+						Generate Table
+					</button>
+				</div>
+
 				{/* <div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div> */}
 
-				{table && (
+				{/* {table && (
 					<>
 						<h1 className="fs-2 p-3">Teacher&apos;s table</h1>
 						<div className=" p-3" style={{ overflowY: "scroll", height: "500px" }}>
@@ -517,7 +565,7 @@ function MainPage() {
 							))}
 						</div>
 					</>
-				)}
+				)} */}
 			</div>
 		</>
 	);
