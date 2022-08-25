@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+
+const doc = new jsPDF();
 
 const WEEEKDAYS = [
 	"Monday",
@@ -9,7 +13,12 @@ const WEEEKDAYS = [
 	"Saturday",
 ];
 
-const TABLEOPTIONS = ["teacher", "class"];
+const TABLEOPTIONS = [
+	{ id: 0, name: "Teachers", isEnabled: true },
+	{ id: 1, name: "Teacher [combined]", isEnabled: false },
+	{ id: 2, name: "Class", isEnabled: true },
+	{ id: 3, name: "Class [combined]", isEnabled: false },
+];
 
 const style = {
 	modal: {
@@ -29,8 +38,8 @@ const style = {
 		justifyContent: "center",
 		alignItems: "start",
 		color: "white",
-		height: "60%",
-		padding: "1rem",
+		height: "80%",
+		padding: "2rem",
 	},
 	btnGrp: {
 		size: "0.5rem",
@@ -67,58 +76,60 @@ const backIcon = (
 );
 
 function Modal({ show, closeModal, table, generalData }) {
-	const [tableOptions, setTableOptions] = useState(TABLEOPTIONS[0]);
+	const [tableOptions, setTableOptions] = useState(TABLEOPTIONS[0].id);
 
 	const goBack = () => {
 		const response = window.confirm("You will lose the data. Are you sue?");
 		if (response) closeModal();
 	};
 
+	const handlePrint = () => {
+		// doc.text("Hello World", 10, 10);
+
+		autoTable(doc, { html: "#teacher-table" });
+		doc.save("timeTable.pdf");
+	};
+
 	return (
 		<>
 			{show && (
 				<div style={style.modal}>
+					<div
+						// className="bg-primary"
+						style={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							width: "80%",
+							position: "relative",
+							marginBottom: "1rem",
+							color: "black",
+						}}
+					>
+						<button className="btn bg-light" onClick={goBack}>
+							{backIcon} Back to Main page
+						</button>
+						<button className="btn btn-outline-dark px-3" onClick={handlePrint}>
+							{pdfIcon} Download
+						</button>
+					</div>
 					<div className="container bg-dark" style={style.container}>
-						<div
-							// className="bg-primary"
-							style={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								width: "100%",
-								position: "relative",
-								top: "-4rem",
-								color: "black",
-							}}
-						>
-							<button className="btn" onClick={goBack}>
-								{backIcon} Back to Main page
-							</button>
-							<button className="btn btn-outline-dark px-3">{pdfIcon} Download</button>
-						</div>
-
 						<div className="d-flex justify-content-center gap-3 p-3 flex-wrap">
-							<button
-								className="btn btn-outline-warning active"
-								onClick={() => setTableOptions(TABLEOPTIONS[0])}
-							>
-								Teachers Table
-							</button>
-							<button
-								className="btn btn-outline-warning"
-								onClick={() => setTableOptions(TABLEOPTIONS[1])}
-							>
-								Class Table
-							</button>
-							<button className="btn btn-outline-warning disabled">
-								Teachers - combined
-							</button>
-							<button className="btn btn-outline-warning disabled">
-								Class - combined
-							</button>
+							{TABLEOPTIONS.map((option) => (
+								<button
+									key={option.id}
+									className={`btn btn-outline-warning ${
+										tableOptions === option.id && "active"
+									}`}
+									disabled={!option.isEnabled}
+									onClick={() => setTableOptions(TABLEOPTIONS[option.id].id)}
+								>
+									{option.name}
+								</button>
+							))}
 						</div>
 
-						{tableOptions === "teacher" && (
+						{tableOptions === 0 && (
 							<>
 								<h1 className="fs-2 p-3">Teacher&apos;s table</h1>
 								<div
@@ -134,6 +145,7 @@ function Modal({ show, closeModal, table, generalData }) {
 								>
 									{Object.entries(table.teacherTable).map((teacher) => (
 										<table
+											id="teacher-table"
 											key={teacher[0]}
 											className="table table-bordered bg-light"
 											style={{
@@ -186,7 +198,7 @@ function Modal({ show, closeModal, table, generalData }) {
 								</div>
 							</>
 						)}
-						{tableOptions === "class" && (
+						{tableOptions === 2 && (
 							<>
 								<h1 className="fs-2 p-3">Class&apos;s table</h1>
 								<div

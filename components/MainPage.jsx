@@ -3,7 +3,7 @@ import { generateTimeTable } from "../logic";
 // import styles from "./MainPage.module.css";
 
 // import { ButtonGroup, Button, TextField } from "@mui/material";
-import { CONSTRAINDATA, TEACHERSDATA } from "../logic/data";
+import { CONSTRAINDATA, GENERALINFO, TEACHERSDATA } from "../logic/data";
 import Modal from "./Modal";
 
 const WEEEKDAYS = [
@@ -35,6 +35,7 @@ const DEFAULTCONSTRAIN = () => {
 	return {
 		slots: { days: "1, 2, 3, 4, 5", sessions: "1, 2, 3" },
 		frequencyPer: { week: 5, day: 1 },
+		_meta: { showDetails: false },
 	};
 };
 
@@ -42,10 +43,7 @@ function MainPage() {
 	const [table, setTable] = useState(null);
 	const [teachersData, setTeachersData] = useState(TEACHERSDATA);
 	const [constrainData, setConstrainData] = useState(CONSTRAINDATA);
-	const [generalData, setGeneralData] = useState({
-		totalDays: 5,
-		totalPeriods: 8,
-	});
+	const [generalData, setGeneralData] = useState(GENERALINFO);
 
 	useEffect(() => {
 		const savedData = JSON.parse(
@@ -198,6 +196,15 @@ function MainPage() {
 		});
 	};
 
+	const toggleConstrainDetails = (id) => {
+		const newConstrainData = constrainData.map((classSub) => {
+			if (classSub.id === id)
+				classSub._meta.showDetails = !classSub._meta.showDetails;
+			return classSub;
+		});
+		setConstrainData(newConstrainData);
+	};
+
 	const handleGenerate = () => {
 		const table = generateTimeTable(
 			parseInt(generalData.totalDays),
@@ -223,6 +230,19 @@ function MainPage() {
 				fillRule="evenodd"
 				d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
 			/>
+		</svg>
+	);
+
+	const dropDownIcon = (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			fill="currentColor"
+			className="bi bi-caret-down-fill"
+			viewBox="0 0 16 16"
+		>
+			<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
 		</svg>
 	);
 
@@ -406,64 +426,77 @@ function MainPage() {
 								<div key={classSub.id} className="bg-light p-2 mb-3 ">
 									<div className="d-flex justify-content-around">
 										<div className="py-2 text-center">
-											<p className="fs-5 w-100 ">
+											<p className="fs-5">
 												<strong>{classSub.classId}</strong>
 											</p>
 										</div>
 										<div className="py-2 text-center">
-											<p className="fs-5 w-100 ">
+											<p className="fs-5">
 												<strong>{classSub.subjectName}</strong>
 											</p>
 										</div>
+										<div className="py-2 text-center">
+											<button
+												className="btn fs-5"
+												id={classSub.id}
+												onClick={() => toggleConstrainDetails(classSub.id)}
+											>
+												{dropDownIcon}
+											</button>
+										</div>
 									</div>
 
-									<p className="m-0">Periods can be filled on :</p>
-									<div className="d-flex justify-content-between">
-										<p className=" m-0 py-3 w-auto px-2">Days</p>
-										<input
-											id={classSub.id}
-											data-field1="slots"
-											data-field2="days"
-											type="text"
-											className="w-25"
-											value={classSub.slots.days}
-											onChange={changeConstrainData}
-										/>
-										<p className=" m-0 py-3 w-auto px-2 ">Periods</p>
-										<input
-											id={classSub.id}
-											data-field1="slots"
-											data-field2="sessions"
-											type="text"
-											className="w-25"
-											value={classSub.slots.sessions}
-											onChange={changeConstrainData}
-										/>
-									</div>
-									<p className="m-0 mt-2">Sessions per :</p>
-									<div className="d-flex justify-content-between">
-										<p className=" m-0 py-3 w-auto px-2">week</p>
-										<input
-											id={classSub.id}
-											data-field1="frequencyPer"
-											data-field2="week"
-											type="number"
-											className="w-25"
-											value={classSub.frequencyPer.week}
-											onChange={changeConstrainData}
-										/>
-										<p className=" m-0 py-3 w-auto px-2">day</p>
-										<input
-											id={classSub.id}
-											data-field1="frequencyPer"
-											data-field2="day"
-											type="number"
-											className="w-25"
-											value={classSub.frequencyPer.day}
-											onChange={changeConstrainData}
-											disabled
-										/>
-									</div>
+									{classSub._meta.showDetails && (
+										<>
+											<p className="m-0">Periods can be filled on :</p>
+											<div className="d-flex justify-content-between">
+												<p className=" m-0 py-3 w-auto px-2">Days</p>
+												<input
+													id={classSub.id}
+													data-field1="slots"
+													data-field2="days"
+													type="text"
+													className="w-25"
+													value={classSub.slots.days}
+													onChange={changeConstrainData}
+												/>
+												<p className=" m-0 py-3 w-auto px-2 ">Periods</p>
+												<input
+													id={classSub.id}
+													data-field1="slots"
+													data-field2="sessions"
+													type="text"
+													className="w-25"
+													value={classSub.slots.sessions}
+													onChange={changeConstrainData}
+												/>
+											</div>
+											<p className="m-0 mt-2">Sessions per :</p>
+											<div className="d-flex justify-content-between">
+												<p className=" m-0 py-3 w-auto px-2">week</p>
+												<input
+													id={classSub.id}
+													data-field1="frequencyPer"
+													data-field2="week"
+													type="number"
+													className="w-25"
+													value={classSub.frequencyPer.week}
+													onChange={changeConstrainData}
+												/>
+												<p className=" m-0 py-3 w-auto px-2">day</p>
+												<input
+													id={classSub.id}
+													data-field1="frequencyPer"
+													data-field2="day"
+													type="number"
+													className="w-25"
+													value={classSub.frequencyPer.day}
+													onChange={changeConstrainData}
+													disabled
+												/>
+											</div>
+										</>
+									)}
 								</div>
 							))}
 						</div>

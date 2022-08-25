@@ -1,6 +1,6 @@
 const GENERALINFO = {
-	days: 5,
-	sessionsPerDay: 8,
+	totalDays: 5,
+	totalPeriods: 8,
 };
 
 const TEACHERSDATA = [
@@ -29,6 +29,7 @@ const CONSTRAINDATA = [
 		classId: "9A",
 		slots: { days: "1,2,3,4,5", sessions: "1,2,3,4,5,6,7,8" },
 		frequencyPer: { week: 5, day: 1 },
+		_meta: { showDetails: false },
 	},
 	{
 		id: "061689",
@@ -36,6 +37,7 @@ const CONSTRAINDATA = [
 		classId: "9A",
 		slots: { days: "1,2,3,4,5", sessions: "1,2,3,4,5,6,7,8" },
 		frequencyPer: { week: 5, day: 1 },
+		_meta: { showDetails: false },
 	},
 ];
 
@@ -73,4 +75,4 @@ const CLASSTABLE = {
 	],
 };
 
-export { TEACHERSDATA, CONSTRAINDATA, TEACHERSTABLE, CLASSTABLE };
+export { TEACHERSDATA, CONSTRAINDATA, TEACHERSTABLE, CLASSTABLE, GENERALINFO };
