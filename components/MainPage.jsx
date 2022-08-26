@@ -34,7 +34,7 @@ const EMPTYTEACHER = () => {
 const DEFAULTCONSTRAIN = () => {
 	return {
 		slots: { days: "1, 2, 3, 4, 5", sessions: "1, 2, 3" },
-		frequencyPer: { week: 5, day: 1 },
+		frequencyPer: { week: 5, space: "EVENLY" },
 		_meta: { showDetails: false },
 	};
 };
@@ -246,6 +246,19 @@ function MainPage() {
 		</svg>
 	);
 
+	const rightArrow = (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			fill="currentColor"
+			className="bi bi-caret-right"
+			viewBox="0 0 16 16"
+		>
+			<path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z" />
+		</svg>
+	);
+
 	// useEffect(() => {
 	// 	if (typeof window !== undefined) {
 	// 		(adsgoogle = window.adsgoogle || []).push({});
@@ -398,6 +411,7 @@ function MainPage() {
 										margin: "auto",
 										textAlign: "center",
 										lineHeight: "70px",
+										cursor: "pointer",
 										// background:
 										// 	"repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 10px)",
 										// background: "rgba(255, 255, 255, 0.5)",
@@ -412,7 +426,18 @@ function MainPage() {
 						{/* <button className="btn bg-green w-100 mt-2">Add Teacher</button> */}
 					</div>
 					<div className="" style={{ maxWidth: "500px" }}>
-						<h1 className="fs-2 p-3">Constrains</h1>
+						<div className="fs-2 p-3">
+							<spam className="fs-2">Constrains</spam>
+							<button
+								className="btn btn-left btn-dark "
+								style={{ position: "relative", width: "5rem", left: "-17.5rem" }}
+								disabled
+							>
+								{rightArrow}
+								{rightArrow}
+							</button>
+						</div>
+
 						<div
 							className="p-3"
 							style={{
@@ -424,7 +449,11 @@ function MainPage() {
 						>
 							{constrainData.map((classSub) => (
 								<div key={classSub.id} className="bg-light p-2 mb-3 ">
-									<div className="d-flex justify-content-around">
+									<div
+										className="d-flex justify-content-around"
+										style={{ cursor: "pointer" }}
+										onClick={() => toggleConstrainDetails(classSub.id)}
+									>
 										<div className="py-2 text-center">
 											<p className="fs-5">
 												<strong>{classSub.classId}</strong>
@@ -436,13 +465,7 @@ function MainPage() {
 											</p>
 										</div>
 										<div className="py-2 text-center">
-											<button
-												className="btn fs-5"
-												id={classSub.id}
-												onClick={() => toggleConstrainDetails(classSub.id)}
-											>
-												{dropDownIcon}
-											</button>
+											<p className="fs-5">{dropDownIcon}</p>
 										</div>
 									</div>
 
@@ -483,17 +506,23 @@ function MainPage() {
 													value={classSub.frequencyPer.week}
 													onChange={changeConstrainData}
 												/>
-												<p className=" m-0 py-3 w-auto px-2">day</p>
-												<input
+												<p className=" m-0 py-3 w-auto px-2"> and space it </p>
+
+												<select
+													name="pets"
 													id={classSub.id}
 													data-field1="frequencyPer"
-													data-field2="day"
-													type="number"
-													className="w-25"
-													value={classSub.frequencyPer.day}
+													data-field2="space"
+													value={classSub.frequencyPer.space}
 													onChange={changeConstrainData}
-													disabled
-												/>
+												>
+													<option value="EVENLY" className="py-5">
+														Evenly
+													</option>
+
+													<option value="ONEPERDAY"> 1 / day</option>
+													<option value="ASYOUWISH"> as you wish</option>
+												</select>
 											</div>
 										</>
 									)}

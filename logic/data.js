@@ -28,7 +28,7 @@ const CONSTRAINDATA = [
 		subjectName: "ENG",
 		classId: "9A",
 		slots: { days: "1,2,3,4,5", sessions: "1,2,3,4,5,6,7,8" },
-		frequencyPer: { week: 5, day: 1 },
+		frequencyPer: { week: 5, space: "EVENLY" },
 		_meta: { showDetails: false },
 	},
 	{
@@ -36,7 +36,7 @@ const CONSTRAINDATA = [
 		subjectName: "MATHS",
 		classId: "9A",
 		slots: { days: "1,2,3,4,5", sessions: "1,2,3,4,5,6,7,8" },
-		frequencyPer: { week: 5, day: 1 },
+		frequencyPer: { week: 5, space: "EVENLY" },
 		_meta: { showDetails: false },
 	},
 ];

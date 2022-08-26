@@ -53,9 +53,6 @@ export const generateTimeTable = (
 		return 0;
 	});
 
-	console.log(allConstrainData);
-	console.log(allTeachersData);
-
 	////////////// start filling from most constrained data //////////////
 	allConstrainData.map((constrain) => {
 		let teacherName;
@@ -70,11 +67,22 @@ export const generateTimeTable = (
 		let slotsToBefilled = constrain.frequencyPer.week;
 		let availableSlots = constrain.availableSlots;
 
+		let slotRefilRemaining =
+			Math.ceil(constrain.frequencyPer.week / totalDays) - 1;
+
 		while (slotsToBefilled > 0) {
-			if (availableSlots.length === 0) {
+			if (availableSlots.length === 0 && slotRefilRemaining === 0) {
 				console.log("Ran out of slots!");
 				response.message = "out of slots";
 				return;
+			}
+			if (
+				constrain.frequencyPer.space === "EVENLY" &&
+				availableSlots.length === 0
+			) {
+				availableSlots = getAvailableSlots(constrain.slots);
+				console.log(availableSlots);
+				slotRefilRemaining -= 1;
 			}
 
 			const randomSlot =
@@ -93,14 +101,13 @@ export const generateTimeTable = (
 					subjectName,
 				];
 
-				slotsToBefilled -= 1;
 				// Removing all the slots for the day
-				if (constrain.frequencyPer.day === 1) {
-					const newAvailableSlots = availableSlots.filter(
-						(slot) => slot[0] !== randomSlot[0]
-					);
-					availableSlots = newAvailableSlots;
-				}
+				const newAvailableSlots = availableSlots.filter(
+					(slot) => slot[0] !== randomSlot[0]
+				);
+				availableSlots = newAvailableSlots;
+
+				slotsToBefilled -= 1;
 			}
 			// Removing the randomSlot
 			const newAvailableSlots = availableSlots.filter(
