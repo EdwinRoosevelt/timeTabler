@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import Table from "./Table";
 
-const doc = new jsPDF();
+const doc = new jsPDF({
+	orientation: "landscape",
+	putOnlyUsedFonts: true,
+});
 
 const WEEEKDAYS = [
 	"Monday",
@@ -14,7 +18,7 @@ const WEEEKDAYS = [
 ];
 
 const TABLEOPTIONS = [
-	{ id: 0, name: "Teachers", isEnabled: true },
+	{ id: 0, name: "Teacher", isEnabled: true },
 	{ id: 1, name: "Teacher [combined]", isEnabled: false },
 	{ id: 2, name: "Class", isEnabled: true },
 	{ id: 3, name: "Class [combined]", isEnabled: false },
@@ -84,10 +88,69 @@ function Modal({ show, closeModal, table, generalData }) {
 	};
 
 	const handlePrint = () => {
-		// doc.text("Hello World", 10, 10);
+		if (!table) return;
+		// Heading
+		doc.setFont("helvetica", "", "bold");
+		doc.setFontSize(75);
+		doc.text("TimeTabler", 25, 100);
+		// Line 2
+		doc.setFontSize(20);
+		doc.setFont("helvetica", "italic", "normal");
+		doc.text("2 minutes time tables", 25, 110);
 
-		autoTable(doc, { html: "#teacher-table" });
-		doc.save("timeTable.pdf");
+		// courtesy
+		doc.setFontSize(10);
+		doc.text("Project by Edwin Roosevelt", 230, 200);
+		doc.addPage();
+
+		// Table pages
+		doc.setFontSize(25);
+		doc.setFont("courier", "", "normal");
+
+		Object.entries(table).map((tableCategory) => {
+			Object.entries(table[tableCategory[0]]).map((content) => {
+				doc.text(`${tableCategory[0].toUpperCase()} - ${content[0]}`, 20, 40);
+				// setting head
+				const tableHead = Array(parseInt(generalData.totalPeriods) + 1).fill(0);
+				tableHead[0] = "";
+				[...Array(parseInt(generalData.totalPeriods)).keys()].map(
+					(day) => (tableHead[day + 1] = day + 1)
+				);
+
+				// setting body
+				const tableBody = Array.from(
+					{ length: parseInt(generalData.totalDays) },
+					() => Array(parseInt(generalData.totalPeriods) + 1).fill(0)
+				);
+				content[1].map((day, index1) => {
+					tableBody[index1][0] = WEEEKDAYS[index1];
+
+					day.map((period, index2) => {
+						if (period === "FREE") tableBody[index1][index2 + 1] = "FREE";
+						else tableBody[index1][index2 + 1] = `${period[0]}\n\n${period[1]}`;
+					});
+				});
+
+				autoTable(doc, {
+					theme: "grid",
+					styles: {
+						halign: "center",
+						valign: "middle",
+						fontSize: 13,
+						font: "courier",
+						cellPadding: 3,
+						overflow: "ellipsize",
+					},
+					margin: { top: 50 },
+					head: [tableHead],
+					body: tableBody,
+				});
+				doc.addPage();
+			});
+		});
+		doc.deletePage();
+
+		doc.save("timeTabler1.pdf");
 	};
 
 	return (
@@ -114,7 +177,10 @@ function Modal({ show, closeModal, table, generalData }) {
 						</button>
 					</div>
 					<div className="container bg-dark" style={style.container}>
-						<div className="d-flex justify-content-center gap-3 p-3 flex-wrap">
+						<div
+							className="d-flex justify-content-center gap-3 p-3 flex-wrap"
+							style={{ marginBottom: "auto" }}
+						>
 							{TABLEOPTIONS.map((option) => (
 								<button
 									key={option.id}
@@ -129,134 +195,27 @@ function Modal({ show, closeModal, table, generalData }) {
 							))}
 						</div>
 
-						{tableOptions === 0 && (
-							<>
-								<h1 className="fs-2 p-3">Teacher&apos;s table</h1>
-								<div
-									className="p-2"
-									style={{
-										overflowY: "scroll",
-										overflowX: "scroll",
-										// overflow: "hidden",
-										height: "auto",
-										// display: "table",
-										width: "100%",
-										marginBottom: "auto",
-									}}
-								>
-									{Object.entries(table.teacherTable).map((teacher) => (
-										<table
-											id="teacher-table"
-											key={teacher[0]}
-											className="table table-bordered bg-light"
-											style={{
-												objectFit: "contain",
-											}}
-										>
-											<thead>
-												<tr>
-													<th
-														className="fs-5 p-2"
-														scope="col"
-														style={{ whiteSpace: "nowrap" }}
-													>
-														{teacher[0]}
-													</th>
-													{[...Array(parseInt(generalData.totalPeriods)).keys()].map(
-														(day) => (
-															<th key={day} className="text-center" scope="col">
-																{day + 1}
-															</th>
-														)
-													)}
-												</tr>
-											</thead>
-											<tbody>
-												{teacher[1].map((day, index) => (
-													<tr key={index}>
-														<th scope="row">{WEEEKDAYS[index]}</th>
-														{day.map((period, index) => (
-															<td className="p-2" key={index}>
-																{period === "FREE" && <div className="fs-4 mx-3">{period}</div>}
-																{period !== "FREE" && (
-																	<div>
-																		<div className="fs-4 me-4">{period[0]}</div>
-																		<div
-																			className="text-end ms-4"
-																			style={{ whiteSpace: "nowrap" }}
-																		>
-																			{period[1]}
-																		</div>
-																	</div>
-																)}
-															</td>
-														))}
-													</tr>
-												))}
-											</tbody>
-										</table>
-									))}
-								</div>
-							</>
+						{!table && (
+							<div
+								style={{ textAlign: "center", width: "100%", marginBottom: "auto" }}
+							>
+								Loading...
+							</div>
 						)}
-						{tableOptions === 2 && (
-							<>
-								<h1 className="fs-2 p-3">Class&apos;s table</h1>
-								<div
-									className="p-2"
-									style={{
-										overflowY: "scroll",
-										overflowX: "scroll",
-										// overflow: "hidden",
-										height: "auto",
-										// display: "table",
-										width: "100%",
-										marginBottom: "auto",
-									}}
-								>
-									{Object.entries(table.classTable).map((classId) => (
-										<table key={classId} className="table table-bordered bg-light">
-											<thead>
-												<tr>
-													<th className="fs-5 p-2" scope="col">
-														{classId[0]}
-													</th>
-													{[...Array(parseInt(generalData.totalPeriods)).keys()].map(
-														(day) => (
-															<th key={day} className="text-center" scope="col">
-																{day + 1}
-															</th>
-														)
-													)}
-												</tr>
-											</thead>
-											<tbody>
-												{classId[1].map((day, index) => (
-													<tr key={index}>
-														<th scope="row">{WEEEKDAYS[index]}</th>
-														{day.map((period, index) => (
-															<td className="p-2" key={index}>
-																{period === "FREE" && <div className="fs-4 mx-3">{period}</div>}
-																{period !== "FREE" && (
-																	<div>
-																		<div className="fs-4 me-4">{period[0]}</div>
-																		<div
-																			className="text-end ms-4"
-																			style={{ whiteSpace: "nowrap" }}
-																		>
-																			{period[1]}
-																		</div>
-																	</div>
-																)}
-															</td>
-														))}
-													</tr>
-												))}
-											</tbody>
-										</table>
-									))}
-								</div>
-							</>
+
+						{table && tableOptions === 0 && (
+							<Table
+								table={table.teacherTable}
+								generalData={generalData}
+								heading="Teacher's table"
+							/>
+						)}
+						{table && tableOptions === 2 && (
+							<Table
+								table={table.classTable}
+								generalData={generalData}
+								heading="Class's table"
+							/>
 						)}
 					</div>
 				</div>

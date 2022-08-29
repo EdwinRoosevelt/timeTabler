@@ -1,5 +1,5 @@
 * {
-	font-family: "Comfortaa", cursive;
+	font-family: "Comfortaa";
 	font-size: 0.9rem;
 }
 
@@ -40,11 +40,21 @@ select {
 }
 
 .bg-red {
+	color: #bd3f32;
+	border: 1px solid #bd3f32;
+}
+
+.bg-red:hover {
 	background: linear-gradient(to left, #cb356b, #bd3f32);
 	color: white;
 }
 
 .bg-green {
+	color: #1e5006;
+	border: 1px solid #1e5006;
+}
+
+.bg-green:hover {
 	background: linear-gradient(to left, #1e5006, #0f9b0f);
 	color: white;
 }

@@ -58,29 +58,38 @@ function MainPage() {
 	});
 
 	useEffect(() => {
-		const savedData = JSON.parse(
-			sessionStorage.getItem("timetabler_saved_session")
-		);
-		if (savedData) {
-			setTeachersData(savedData.teachersData);
-			setConstrainData(savedData.constrainData);
-			setGeneralData(savedData.generalData);
-			setRecentSetting(savedData.recentSetting);
-		}
+		// const savedData = JSON.parse(
+		// 	sessionStorage.getItem("timetabler_saved_session")
+		// );
+		// if (savedData) {
+		// 	setTeachersData(savedData.teachersData);
+		// 	setConstrainData(savedData.constrainData);
+		// 	setGeneralData(savedData.generalData);
+		// 	setRecentSetting(savedData.recentSetting);
+		// }
+		addEventListener("beforeunload", beforeUnloadListener);
+		return () => {
+			removeEventListener("beforeunload", beforeUnloadListener);
+		};
 	}, []);
 
+	const beforeUnloadListener = (event) => {
+		event.preventDefault();
+		return (event.returnValue = "Are you sure you want to exit?");
+	};
+
 	// Avoiding update on the first render
-	const firstRender = useRef(true);
-	useEffect(() => {
-		if (firstRender.current) {
-			firstRender.current = false;
-			return;
-		}
-		sessionStorage.setItem(
-			"timetabler_saved_session",
-			JSON.stringify({ teachersData, constrainData, generalData, recentSetting })
-		);
-	}, [teachersData, constrainData, generalData, recentSetting]);
+	// const firstRender = useRef(true);
+	// useEffect(() => {
+	// 	if (firstRender.current) {
+	// 		firstRender.current = false;
+	// 		return;
+	// 	}
+	// 	sessionStorage.setItem(
+	// 		"timetabler_saved_session",
+	// 		JSON.stringify({ teachersData, constrainData, generalData, recentSetting })
+	// 	);
+	// }, [teachersData, constrainData, generalData, recentSetting]);
 
 	const changeGeneralInfo = (event) => {
 		setGeneralData((generalData) => {
@@ -254,14 +263,16 @@ function MainPage() {
 	};
 
 	const handleGenerate = () => {
-		const table = generateTimeTable(
-			parseInt(generalData.totalDays),
-			parseInt(generalData.totalPeriods),
-			teachersData,
-			constrainData
-		);
-		setTable(table);
 		setShowModal(true);
+		setTimeout(() => {
+			const table = generateTimeTable(
+				parseInt(generalData.totalDays),
+				parseInt(generalData.totalPeriods),
+				teachersData,
+				constrainData
+			);
+			setTable(table);
+		}, 1000);
 	};
 
 	const deleteIcon = (
@@ -593,12 +604,16 @@ function MainPage() {
 							))}
 						</div>
 						<p className="text-secondary p-2">
-							*Constrain will automatically be added based on the Teachers data.
+							* Adding / Removing constrain is automatic. You only need to Edit.
 						</p>
 					</div>
 				</div>
 				<div className="p-3">
-					<button className="btn bg-done w-100" onClick={handleGenerate}>
+					<button
+						className="btn bg-done w-100"
+						style={{ height: "50px" }}
+						onClick={handleGenerate}
+					>
 						Generate Table
 					</button>
 				</div>
