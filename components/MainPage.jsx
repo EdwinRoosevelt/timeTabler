@@ -31,12 +31,20 @@ const EMPTYTEACHER = () => {
 	};
 };
 
-const DEFAULTCONSTRAIN = () => {
-	return {
-		slots: { days: "1, 2, 3, 4, 5", sessions: "1, 2, 3" },
+const DEFAULTCONSTRAIN = (recentSetting) => {
+	const newConstrain = {
+		slots: { days: [1, 2, 3, 4, 5], sessions: [1, 2, 3] },
 		frequencyPer: { week: 5, space: "EVENLY" },
 		_meta: { showDetails: false },
 	};
+	if (recentSetting) {
+		newConstrain.frequencyPer = JSON.parse(
+			JSON.stringify(recentSetting.frequencyPer)
+		);
+		newConstrain.slots = JSON.parse(JSON.stringify(recentSetting.slots));
+	}
+	console.log(newConstrain);
+	return newConstrain;
 };
 
 function MainPage() {
@@ -44,6 +52,10 @@ function MainPage() {
 	const [teachersData, setTeachersData] = useState(TEACHERSDATA);
 	const [constrainData, setConstrainData] = useState(CONSTRAINDATA);
 	const [generalData, setGeneralData] = useState(GENERALINFO);
+	const [recentSetting, setRecentSetting] = useState({
+		slots: { days: [1, 2, 3, 4, 5], sessions: [1, 2, 3] },
+		frequencyPer: { week: 5, space: "EVENLY" },
+	});
 
 	useEffect(() => {
 		const savedData = JSON.parse(
@@ -53,6 +65,7 @@ function MainPage() {
 			setTeachersData(savedData.teachersData);
 			setConstrainData(savedData.constrainData);
 			setGeneralData(savedData.generalData);
+			setRecentSetting(savedData.recentSetting);
 		}
 	}, []);
 
@@ -65,9 +78,9 @@ function MainPage() {
 		}
 		sessionStorage.setItem(
 			"timetabler_saved_session",
-			JSON.stringify({ teachersData, constrainData, generalData })
+			JSON.stringify({ teachersData, constrainData, generalData, recentSetting })
 		);
-	}, [teachersData, constrainData, generalData]);
+	}, [teachersData, constrainData, generalData, recentSetting]);
 
 	const changeGeneralInfo = (event) => {
 		setGeneralData((generalData) => {
@@ -160,9 +173,44 @@ function MainPage() {
 		const field1 = event.target.getAttribute("data-field1");
 		const field2 = event.target.getAttribute("data-field2");
 
+		// console.log(event.nativeEvent.inputType === "deleteContentBackward");
+		// console.log(event.target.value);
+
 		const newConstrainData = constrainData.map((classSub) => {
-			if (classSub.id === event.target.id)
-				classSub[field1][field2] = event.target.value;
+			if (classSub.id === event.target.id) {
+				if (field2 === "days" || field2 === "sessions") {
+					// Poping last value
+					if (event.nativeEvent.inputType === "deleteContentBackward") {
+						classSub[field1][field2].pop();
+						setRecentSetting({
+							slots: classSub.slots,
+							frequencyPer: classSub.frequencyPer,
+						});
+						return classSub;
+					}
+					const newValue = parseInt(event.target.value.at(-1));
+
+					// ignoring Not_A_Number
+					if (isNaN(newValue)) return classSub;
+
+					// ignoring values > upperlimit
+					if (field2 === "days" && newValue > generalData.totalDays) return classSub;
+					if (field2 === "sessions" && newValue > generalData.totalPeriods)
+						return classSub;
+
+					// ignoring duplicates values
+					if (classSub[field1][field2].includes(newValue)) return classSub;
+
+					// Inserting new value
+					classSub[field1][field2].push(newValue);
+				} else {
+					classSub[field1][field2] = event.target.value;
+				}
+				setRecentSetting({
+					slots: classSub.slots,
+					frequencyPer: classSub.frequencyPer,
+				});
+			}
 			return classSub;
 		});
 		setConstrainData(newConstrainData);
@@ -187,7 +235,7 @@ function MainPage() {
 					return classSub;
 				});
 				if (!isKeyPresent) {
-					newClassSub = { ...newClassSub, ...DEFAULTCONSTRAIN() };
+					newClassSub = { ...newClassSub, ...DEFAULTCONSTRAIN(recentSetting) };
 					newConstrainData.push(newClassSub);
 					console.log(newClassSub);
 				}
@@ -256,6 +304,19 @@ function MainPage() {
 			viewBox="0 0 16 16"
 		>
 			<path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z" />
+		</svg>
+	);
+
+	const dropRightIcon = (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			fill="currentColor"
+			className="bi bi-caret-right-fill"
+			viewBox="0 0 16 16"
+		>
+			<path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
 		</svg>
 	);
 
@@ -428,14 +489,14 @@ function MainPage() {
 					<div className="" style={{ maxWidth: "500px" }}>
 						<div className="fs-2 p-3">
 							<spam className="fs-2">Constrains</spam>
-							<button
+							{/* <button
 								className="btn btn-left btn-dark "
-								style={{ position: "relative", width: "5rem", left: "-17.5rem" }}
+								style={{ position: "relative", width: "100px", left: "-250px" }}
 								disabled
 							>
 								{rightArrow}
 								{rightArrow}
-							</button>
+							</button> */}
 						</div>
 
 						<div
@@ -450,22 +511,24 @@ function MainPage() {
 							{constrainData.map((classSub) => (
 								<div key={classSub.id} className="bg-light p-2 mb-3 ">
 									<div
-										className="d-flex justify-content-around"
+										className="row text-center py-2"
 										style={{ cursor: "pointer" }}
 										onClick={() => toggleConstrainDetails(classSub.id)}
 									>
-										<div className="py-2 text-center">
+										<div className="col-4">
+											<p className="fs-5">
+												{classSub._meta.showDetails ? dropDownIcon : dropRightIcon}
+											</p>
+										</div>
+										<div className="col-4">
 											<p className="fs-5">
 												<strong>{classSub.classId}</strong>
 											</p>
 										</div>
-										<div className="py-2 text-center">
+										<div className="col-4">
 											<p className="fs-5">
 												<strong>{classSub.subjectName}</strong>
 											</p>
-										</div>
-										<div className="py-2 text-center">
-											<p className="fs-5">{dropDownIcon}</p>
 										</div>
 									</div>
 

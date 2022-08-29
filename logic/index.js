@@ -11,8 +11,8 @@ const isSlotEqual = (slot1, slot2) => {
 const getAvailableSlots = (slots) => {
 	let availableSlots = [];
 
-	slots.days.split(",").map((day) => {
-		slots.sessions.split(",").map((session) => {
+	slots.days.map((day) => {
+		slots.sessions.map((session) => {
 			availableSlots.push([day - 1, session - 1]);
 		});
 	});

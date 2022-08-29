@@ -138,9 +138,10 @@ function Modal({ show, closeModal, table, generalData }) {
 										overflowY: "scroll",
 										overflowX: "scroll",
 										// overflow: "hidden",
-										height: "500px",
+										height: "auto",
 										// display: "table",
 										width: "100%",
+										marginBottom: "auto",
 									}}
 								>
 									{Object.entries(table.teacherTable).map((teacher) => (
@@ -207,9 +208,10 @@ function Modal({ show, closeModal, table, generalData }) {
 										overflowY: "scroll",
 										overflowX: "scroll",
 										// overflow: "hidden",
-										height: "500px",
+										height: "auto",
 										// display: "table",
 										width: "100%",
+										marginBottom: "auto",
 									}}
 								>
 									{Object.entries(table.classTable).map((classId) => (
