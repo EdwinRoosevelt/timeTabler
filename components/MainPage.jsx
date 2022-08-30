@@ -35,7 +35,9 @@ const DEFAULTCONSTRAIN = (recentSetting) => {
 	const newConstrain = {
 		slots: { days: [1, 2, 3, 4, 5], sessions: [1, 2, 3] },
 		frequencyPer: { week: 5, space: "EVENLY" },
-		_meta: { showDetails: false },
+		_meta: { showDetails: false, showAdvancedQuery: false },
+		labSession: { enabled: false, count: 3 },
+		firstPeriod: { enabled: false },
 	};
 	if (recentSetting) {
 		newConstrain.frequencyPer = JSON.parse(
@@ -253,10 +255,9 @@ function MainPage() {
 		});
 	};
 
-	const toggleConstrainDetails = (id) => {
+	const toggleContent = (id, type, subType) => {
 		const newConstrainData = constrainData.map((classSub) => {
-			if (classSub.id === id)
-				classSub._meta.showDetails = !classSub._meta.showDetails;
+			if (classSub.id === id) classSub[type][subType] = !classSub[type][subType];
 			return classSub;
 		});
 		setConstrainData(newConstrainData);
@@ -351,7 +352,7 @@ function MainPage() {
 				table={table}
 				generalData={generalData}
 			/>
-			<div className="container text-center p-3 mb-3">
+			<div className="container text-center p-3 my-4">
 				<h1 className="display-3">TimeTabler</h1>
 				<p>2 minutes time tables</p>
 			</div>
@@ -413,10 +414,10 @@ function MainPage() {
 								padding: "0.5rem",
 							}}
 						>
-							<div className="d-flex gap-2 flex-wrap p-2">
+							<div className="d-flex gap-2 flex-wrap p-2 ">
 								{teachersData.map((teacher, index) => (
 									<div
-										className="d-flex gap-2 bg-light w-100 mb-3 p-3 flex-wrap justify-content-end align-items-center"
+										className="d-flex gap-2 bg-light w-100 mb-3 p-3 flex-wrap justify-content-end align-items-center shadow"
 										key={index}
 									>
 										<input
@@ -520,11 +521,11 @@ function MainPage() {
 							}}
 						>
 							{constrainData.map((classSub) => (
-								<div key={classSub.id} className="bg-light p-2 mb-3 ">
+								<div key={classSub.id} className="bg-light p-2 mb-3 shadow">
 									<div
 										className="row text-center py-2"
 										style={{ cursor: "pointer" }}
-										onClick={() => toggleConstrainDetails(classSub.id)}
+										onClick={() => toggleContent(classSub.id, "_meta", "showDetails")}
 									>
 										<div className="col-4">
 											<p className="fs-5">
@@ -598,6 +599,61 @@ function MainPage() {
 													<option value="ASYOUWISH"> as you wish</option>
 												</select>
 											</div>
+											<hr />
+
+											<p
+												className="m-0 p-2"
+												style={{ cursor: "pointer" }}
+												onClick={() =>
+													toggleContent(classSub.id, "_meta", "showAdvancedQuery")
+												}
+											>
+												<span className="px-3">
+													{classSub._meta.showAdvancedQuery ? dropDownIcon : dropRightIcon}
+												</span>
+												Advanced Queries
+											</p>
+											{classSub._meta.showAdvancedQuery && (
+												<>
+													<div className="d-flex justify-content-start">
+														<input
+															type="checkbox"
+															className="mx-2"
+															style={{ width: "1.75rem", height: "1.75rem" }}
+															checked={classSub.labSession.enabled}
+															onChange={() =>
+																toggleContent(classSub.id, "labSession", "enabled")
+															}
+														/>
+														<p className=" m-0 py-3 w-auto px-2"> Add </p>
+														<input
+															id={classSub.id}
+															data-field1="labSession"
+															data-field2="count"
+															type="number"
+															style={{ width: "10%" }}
+															className="mx-2"
+															value={classSub.labSession.count}
+															onChange={changeConstrainData}
+														/>
+														<p className=" m-0 py-3 w-auto px-2"> lab sessions </p>
+													</div>
+													<div className="d-flex justify-content-start">
+														<input
+															type="checkbox"
+															className="mx-2"
+															style={{ width: "1.75rem", height: "1.75rem" }}
+															checked={classSub.firstPeriod.enabled}
+															onChange={() =>
+																toggleContent(classSub.id, "firstPeriod", "enabled")
+															}
+														/>
+														<p className=" m-0 py-3 w-auto  px-2">
+															{"Atleast 1 first period in a week [for class teachers]"}
+														</p>
+													</div>
+												</>
+											)}
 										</>
 									)}
 								</div>

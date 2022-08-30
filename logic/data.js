@@ -29,7 +29,9 @@ const CONSTRAINDATA = [
 		classId: "9A",
 		slots: { days: [1, 2, 3, 4, 5], sessions: [1, 2, 3, 4, 5, 6, 7, 8] },
 		frequencyPer: { week: 5, space: "EVENLY" },
-		_meta: { showDetails: false },
+		_meta: { showDetails: false, showAdvancedQuery: false },
+		labSession: { enabled: false, count: 3 },
+		firstPeriod: { enabled: false },
 	},
 	{
 		id: "061689",
@@ -37,7 +39,9 @@ const CONSTRAINDATA = [
 		classId: "9A",
 		slots: { days: [1, 2, 3, 4, 5], sessions: [1, 2, 3, 4, 5, 6, 7, 8] },
 		frequencyPer: { week: 5, space: "EVENLY" },
-		_meta: { showDetails: false },
+		_meta: { showDetails: false, showAdvancedQuery: false },
+		labSession: { enabled: false, count: 3 },
+		firstPeriod: { enabled: false },
 	},
 ];
 
