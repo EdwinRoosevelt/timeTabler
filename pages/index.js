@@ -14,12 +14,12 @@ export default function Home() {
 
 			<MainPage />
 
-			<footer>
-				<div className="container">
+			<footer style={{ marginTop: "50px" }}>
+				<div className="container text-center">
 					<hr></hr>
 					<p>
 						Made by{" "}
-						<a href="https:www.edwinroosevelt.com" target="_blank" rel="noreferrer">
+						<a href="https://www.edwinroosevelt.com" target="_blank" rel="noreferrer">
 							Edwin Roosevelt
 						</a>
 					</p>
