@@ -3,23 +3,20 @@ import { generateTimeTable } from "../logic";
 // import styles from "./MainPage.module.css";
 
 // import { ButtonGroup, Button, TextField } from "@mui/material";
-import { CONSTRAINDATA, GENERALINFO, TEACHERSDATA } from "../logic/data";
+import {
+	CONSTRAINDATA,
+	GENERALINFO,
+	TEACHERSDATA,
+	COLORS,
+} from "../logic/data";
 import Modal from "./Modal";
-
-const WEEEKDAYS = [
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday",
-];
 
 const EMPTYCLASSSUB = () => {
 	return {
 		id: Math.random().toString(16).slice(8),
 		subjectName: "",
 		classId: "",
+		color: 0,
 	};
 };
 
@@ -47,6 +44,22 @@ const DEFAULTCONSTRAIN = (recentSetting) => {
 	}
 	console.log(newConstrain);
 	return newConstrain;
+};
+
+const colorBox = (color, type, isSelected) => {
+	const style = {
+		width: "10%",
+		border: isSelected ? "2px solid black" : null,
+		height: type === "BIG" ? "25px" : "20px",
+		width: type === "BIG" ? "25px" : "20px",
+		cursor: "pointer",
+		backgroundColor: color.bg,
+		color: color.text,
+	};
+
+	if (color.bg.length == 2)
+		style.backgroundImage = `linear-gradient(to right, ${color.bg[0]} , ${color.bg[1]})`;
+	return style;
 };
 
 function MainPage() {
@@ -143,6 +156,7 @@ function MainPage() {
 	};
 
 	const deleteClassSub = (event) => {
+		console.log("trying to del");
 		const teacherToBeDel = event.target.id.split(",")[0];
 		const classSubToBeDel = event.target.id.split(",")[1];
 
@@ -170,6 +184,38 @@ function MainPage() {
 					if (classSub.id === classSubId) {
 						classSub[type] = event.target.value;
 						updateConstrainData(classSub, "UPDATE");
+					}
+					return classSub;
+				});
+				teacher.classSub = newClassSub;
+			}
+			return teacher;
+		});
+		setTeachersData(newTeachersData);
+	};
+
+	const toggleColorDroDown = (teacherId, classSubId) => {
+		const newTeachersData = teachersData.map((teacher) => {
+			if (teacher.id === teacherId) {
+				const newClassSub = teacher.classSub.map((classSub) => {
+					if (classSub.id === classSubId) {
+						classSub.showColorDropdown = !classSub.showColorDropdown;
+					}
+					return classSub;
+				});
+				teacher.classSub = newClassSub;
+			}
+			return teacher;
+		});
+		setTeachersData(newTeachersData);
+	};
+
+	const changeColor = (teacherId, classSubId, colorId) => {
+		const newTeachersData = teachersData.map((teacher) => {
+			if (teacher.id === teacherId) {
+				const newClassSub = teacher.classSub.map((classSub) => {
+					if (classSub.id === classSubId) {
+						classSub.color = colorId;
 					}
 					return classSub;
 				});
@@ -418,7 +464,7 @@ function MainPage() {
 								{teachersData.map((teacher, index) => (
 									<div
 										className="d-flex gap-2 bg-light w-100 mb-3 p-3 flex-wrap justify-content-end align-items-center shadow"
-										key={index}
+										key={teacher.id}
 									>
 										<input
 											id={teacher.id}
@@ -435,35 +481,57 @@ function MainPage() {
 										>
 											{deleteIcon}
 										</button>
-										{teacher.classSub.map((classSub, index) => (
-											<div
-												className="d-flex gap-2 flex-wrap justify-content-end align-items-center"
-												key={index}
-											>
-												<div className="w-20 text-center">{index + 1}</div>
-												<input
-													id={[teacher.id, classSub.id, "classId"]}
-													type="text"
-													className="w-25"
-													value={classSub.classId}
-													onChange={changeClassSub}
-													placeholder="class"
-												/>
-												<input
-													id={[teacher.id, classSub.id, "subjectName"]}
-													type="text"
-													className="w-25"
-													value={classSub.subjectName}
-													onChange={changeClassSub}
-													placeholder="subject"
-												/>
-												<button
-													id={[teacher.id, classSub.id]}
-													className="btn btn-right bg-red w-20"
-													onClick={deleteClassSub}
-												>
-													{deleteIcon}
-												</button>
+										{teacher.classSub.map((classSub) => (
+											<div key={`classSub-${classSub.id}`}>
+												<div className="d-flex gap-2 flex-wrap justify-content-end align-items-center">
+													{/* <div className="text-center">{index + 1}</div> */}
+													<div
+														style={colorBox(
+															COLORS[classSub.color],
+															"BIG",
+															classSub.showColorDropdown
+														)}
+														onClick={() => toggleColorDroDown(teacher.id, classSub.id)}
+													></div>
+													<input
+														id={[teacher.id, classSub.id, "classId"]}
+														type="text"
+														className="w-25"
+														value={classSub.classId}
+														onChange={changeClassSub}
+														placeholder="class"
+													/>
+													<input
+														id={[teacher.id, classSub.id, "subjectName"]}
+														type="text"
+														className="w-25"
+														value={classSub.subjectName}
+														onChange={changeClassSub}
+														placeholder="subject"
+													/>
+													<button
+														id={[teacher.id, classSub.id]}
+														className="btn btn-right bg-red w-20"
+														onClick={deleteClassSub}
+													>
+														{deleteIcon}
+													</button>
+												</div>
+												{classSub.showColorDropdown && (
+													<div
+														className="d-flex gap-3 my-2 flex-wrap justify-content-start align-items-center"
+														style={{ width: "81%", marginLeft: "auto" }}
+														key={`colorDropDown-${classSub.id}`}
+													>
+														{COLORS.map((color, colorIndex) => (
+															<div
+																key={`colors-${classSub.id}-${colorIndex}`}
+																style={colorBox(color, "N", classSub.color == colorIndex)}
+																onClick={() => changeColor(teacher.id, classSub.id, colorIndex)}
+															></div>
+														))}
+													</div>
+												)}
 											</div>
 										))}
 										<button
@@ -500,7 +568,7 @@ function MainPage() {
 					</div>
 					<div className="" style={{ maxWidth: "500px" }}>
 						<div className="fs-2 p-3">
-							<spam className="fs-2">Constrains</spam>
+							<span className="fs-2">Constrains</span>
 							{/* <button
 								className="btn btn-left btn-dark "
 								style={{ position: "relative", width: "100px", left: "-250px" }}
@@ -521,7 +589,10 @@ function MainPage() {
 							}}
 						>
 							{constrainData.map((classSub) => (
-								<div key={classSub.id} className="bg-light p-2 mb-3 shadow">
+								<div
+									key={`constrain-${classSub.id}`}
+									className="bg-light p-2 mb-3 shadow"
+								>
 									<div
 										className="row text-center py-2"
 										style={{ cursor: "pointer" }}
@@ -660,7 +731,7 @@ function MainPage() {
 							))}
 						</div>
 						<p className="text-secondary p-2">
-							* Adding / Removing constrain is automatic. You only need to Edit.
+							* Adding / Removing constrain is automatic. You only need to Edit it.
 						</p>
 					</div>
 				</div>
@@ -675,93 +746,6 @@ function MainPage() {
 				</div>
 
 				{/* <div className="bg-light border text-center my-3 mx-3 p-5">Google Ads</div> */}
-
-				{/* {table && (
-					<>
-						<h1 className="fs-2 p-3">Teacher&apos;s table</h1>
-						<div className=" p-3" style={{ overflowY: "scroll", height: "500px" }}>
-							{Object.entries(table.teacherTable).map((teacher) => (
-								<table key={teacher[0]} className="table table-bordered bg-light">
-									<thead>
-										<tr>
-											<th
-												className="fs-5 p-2"
-												scope="col"
-												style={{ whiteSpace: "nowrap" }}
-											>
-												{teacher[0]}
-											</th>
-											{[...Array(parseInt(generalData.totalPeriods)).keys()].map((day) => (
-												<th key={day} className="text-center" scope="col">
-													{day + 1}
-												</th>
-											))}
-										</tr>
-									</thead>
-									<tbody>
-										{teacher[1].map((day, index) => (
-											<tr key={index}>
-												<th scope="row">{WEEEKDAYS[index]}</th>
-												{day.map((period, index) => (
-													<td className="p-2" key={index}>
-														{period === "FREE" && <div className="fs-4 mx-3">{period}</div>}
-														{period !== "FREE" && (
-															<div>
-																<div className="fs-4 me-4">{period[0]}</div>
-																<div className="text-end ms-4" style={{ whiteSpace: "nowrap" }}>
-																	{period[1]}
-																</div>
-															</div>
-														)}
-													</td>
-												))}
-											</tr>
-										))}
-									</tbody>
-								</table>
-							))}
-						</div>
-						<h1 className="fs-2 p-3">Class&apos;s table</h1>
-						<div className=" p-3" style={{ overflowY: "scroll", height: "500px" }}>
-							{Object.entries(table.classTable).map((classId) => (
-								<table key={classId} className="table table-bordered bg-light">
-									<thead>
-										<tr>
-											<th className="fs-5 p-2" scope="col">
-												{classId[0]}
-											</th>
-											{[...Array(parseInt(generalData.totalPeriods)).keys()].map((day) => (
-												<th key={day} className="text-center" scope="col">
-													{day + 1}
-												</th>
-											))}
-										</tr>
-									</thead>
-									<tbody>
-										{classId[1].map((day, index) => (
-											<tr key={index}>
-												<th scope="row">{WEEEKDAYS[index]}</th>
-												{day.map((period, index) => (
-													<td className="p-2" key={index}>
-														{period === "FREE" && <div className="fs-4 mx-3">{period}</div>}
-														{period !== "FREE" && (
-															<div>
-																<div className="fs-4 me-4">{period[0]}</div>
-																<div className="text-end ms-4" style={{ whiteSpace: "nowrap" }}>
-																	{period[1]}
-																</div>
-															</div>
-														)}
-													</td>
-												))}
-											</tr>
-										))}
-									</tbody>
-								</table>
-							))}
-						</div>
-					</>
-				)} */}
 			</div>
 		</>
 	);

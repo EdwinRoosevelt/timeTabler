@@ -1,4 +1,5 @@
 import React from "react";
+import { COLORS } from "../logic/data";
 
 const WEEEKDAYS = [
 	"Monday",
@@ -9,7 +10,17 @@ const WEEEKDAYS = [
 	"Saturday",
 ];
 
-function Table({ heading, table, generalData }) {
+const getCellStyle = (bgColor, textColor) => {
+	const style = {
+		backgroundColor: bgColor,
+		color: textColor,
+	};
+	if (bgColor.length == 2)
+		style.backgroundImage = `linear-gradient(to right, ${bgColor[0]} , ${bgColor[1]})`;
+	return style;
+};
+
+function Table({ heading, table, generalData, colorMap }) {
 	return (
 		<>
 			<h1 className="fs-2  p-3">{heading}</h1>
@@ -24,9 +35,8 @@ function Table({ heading, table, generalData }) {
 			>
 				{Object.entries(table).map((content) => (
 					<table
-						id={`table-${content[0]}`}
 						key={content[0]}
-						className="table table-bordered bg-light"
+						className="table table-bordered table-dark"
 						style={{
 							objectFit: "contain",
 						}}
@@ -44,22 +54,39 @@ function Table({ heading, table, generalData }) {
 							</tr>
 						</thead>
 						<tbody>
-							{content[1].map((day, index) => (
-								<tr key={index}>
-									<th scope="row">{WEEEKDAYS[index]}</th>
-									{day.map((period, index) => (
-										<td className="p-2" key={index}>
-											{period === "FREE" && <div className="fs-4 mx-3">{period}</div>}
-											{period !== "FREE" && (
-												<div>
-													<div className="fs-4 me-4">{period[0]}</div>
-													<div className="text-end ms-4" style={{ whiteSpace: "nowrap" }}>
-														{period[1]}
+							{content[1].map((day, row) => (
+								<tr key={row}>
+									<th scope="row">{WEEEKDAYS[row]}</th>
+									{day.map((period, col) => {
+										if (period === "FREE")
+											return (
+												<td
+													className="p-2"
+													key={col}
+													style={getCellStyle(COLORS.at(-1).bg, COLORS.at(-1).text)}
+												>
+													<div className="fs-4 mx-3">{period}</div>
+												</td>
+											);
+										else
+											return (
+												<td
+													className="p-2"
+													key={col}
+													style={getCellStyle(
+														COLORS[colorMap[content[0]][row][col]].bg,
+														COLORS[colorMap[content[0]][row][col]].text
+													)}
+												>
+													<div>
+														<div className="fs-4 me-4">{period[0]}</div>
+														<div className="text-end ms-4" style={{ whiteSpace: "nowrap" }}>
+															{period[1]}
+														</div>
 													</div>
-												</div>
-											)}
-										</td>
-									))}
+												</td>
+											);
+									})}
 								</tr>
 							))}
 						</tbody>

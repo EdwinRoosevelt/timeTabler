@@ -28,6 +28,7 @@ export const generateTimeTable = (
 ) => {
 	const teacherTable = {};
 	const classTable = {};
+	const colorMap = {};
 	const resultStats = {};
 
 	/////////////////////// Creating empty table //////////////////////
@@ -78,9 +79,13 @@ export const generateTimeTable = (
 	////////////// start filling from most constrained data //////////////
 	newAllConstrainData.map((constrain) => {
 		let teacherName;
+		let color;
 		allTeachersData.map((teacher) => {
 			teacher.classSub.map((classSub) => {
-				if (classSub.id === constrain.id) teacherName = teacher.name;
+				if (classSub.id === constrain.id) {
+					teacherName = teacher.name;
+					color = classSub.color;
+				}
 			});
 		});
 		const subjectName = constrain.subjectName;
@@ -88,6 +93,26 @@ export const generateTimeTable = (
 
 		let slotsToBefilled = constrain.frequencyPer.week;
 		let availableSlots = constrain.availableSlots;
+
+		// initializing colorMatrix
+		if (colorMap[classId] === undefined) {
+			colorMap[classId] = {};
+			for (let row = 0; row < totalDays; row++) {
+				colorMap[classId][row] = {};
+				for (let col = 0; col < totalSessions; col++) {
+					colorMap[classId][row][col] = 0;
+				}
+			}
+		}
+		if (colorMap[teacherName] === undefined) {
+			colorMap[teacherName] = {};
+			for (let row = 0; row < totalDays; row++) {
+				colorMap[teacherName][row] = {};
+				for (let col = 0; col < totalSessions; col++) {
+					colorMap[teacherName][row][col] = {};
+				}
+			}
+		}
 
 		let slotRefilRemaining =
 			Math.ceil(constrain.frequencyPer.week / totalDays) - 1;
@@ -126,18 +151,23 @@ export const generateTimeTable = (
 						subjectName,
 						teacherName,
 					];
+					colorMap[classId][randomSlot[0]][randomSlot[1]] = color;
 					teacherTable[teacherName][randomSlot[0]][randomSlot[1]] = [
 						classId,
 						subjectName,
 					];
+					colorMap[teacherName][randomSlot[0]][randomSlot[1]] = color;
+
 					classTable[classId][extraSlot[0]][extraSlot[1]] = [
 						subjectName,
 						teacherName,
 					];
+					colorMap[classId][extraSlot[0]][extraSlot[1]] = color;
 					teacherTable[teacherName][extraSlot[0]][extraSlot[1]] = [
 						classId,
 						subjectName,
 					];
+					colorMap[teacherName][extraSlot[0]][extraSlot[1]] = color;
 
 					// Removing all the slots for the day
 					const newAvailableSlots = availableSlots.filter(
@@ -159,10 +189,12 @@ export const generateTimeTable = (
 						subjectName,
 						teacherName,
 					];
+					colorMap[classId][randomSlot[0]][randomSlot[1]] = color;
 					teacherTable[teacherName][randomSlot[0]][randomSlot[1]] = [
 						classId,
 						subjectName,
 					];
+					colorMap[teacherName][randomSlot[0]][randomSlot[1]] = color;
 
 					// Removing all the slots for the day
 					const newAvailableSlots = availableSlots.filter(
@@ -181,5 +213,5 @@ export const generateTimeTable = (
 		}
 	});
 
-	return { teacherTable, classTable, resultStats };
+	return { teacherTable, classTable, colorMap, resultStats };
 };

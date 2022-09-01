@@ -9,14 +9,18 @@ const TEACHERSDATA = [
 		name: "Professor X",
 		classSub: [
 			{
-				id: "06168",
+				id: "121212",
 				subjectName: "ENG",
 				classId: "9A",
+				color: 0,
+				showColorDropdown: false,
 			},
 			{
 				id: "061689",
 				subjectName: "MATHS",
 				classId: "9A",
+				color: 1,
+				showColorDropdown: false,
 			},
 		],
 	},
@@ -24,7 +28,7 @@ const TEACHERSDATA = [
 
 const CONSTRAINDATA = [
 	{
-		id: "06168",
+		id: "121212",
 		subjectName: "ENG",
 		classId: "9A",
 		slots: { days: [1, 2, 3, 4, 5], sessions: [1, 2, 3, 4, 5, 6, 7, 8] },
@@ -79,4 +83,21 @@ const CLASSTABLE = {
 	],
 };
 
-export { TEACHERSDATA, CONSTRAINDATA, TEACHERSTABLE, CLASSTABLE, GENERALINFO };
+const COLORS = [
+	{ bg: ["#FF512F", "#DD2476"], text: "#FFFFFF" },
+	{ bg: ["#E55D87", "#5FC3E4"], text: "#282A35" },
+	{ bg: ["#EDE574", "#E1F5C4"], text: "#282A35" },
+	{ bg: ["#cc2b5e", "#753a88"], text: "#FFFFFF" },
+	{ bg: ["#314755", "#26a0da"], text: "#FFFFFF" },
+	{ bg: ["#BBD2C5", "#536976"], text: "#282A35" },
+	{ bg: ["#3CA55C", "#B5AC49"], text: "#282A35" },
+];
+
+export {
+	TEACHERSDATA,
+	CONSTRAINDATA,
+	TEACHERSTABLE,
+	CLASSTABLE,
+	GENERALINFO,
+	COLORS,
+};

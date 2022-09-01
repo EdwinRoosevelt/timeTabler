@@ -8,6 +8,8 @@ const doc = new jsPDF({
 	putOnlyUsedFonts: true,
 });
 
+import { COLORS } from "../logic/data";
+
 const WEEEKDAYS = [
 	"Monday",
 	"Tuesday",
@@ -176,7 +178,7 @@ function Modal({ show, closeModal, table, generalData }) {
 							{pdfIcon} Download
 						</button>
 					</div>
-					<div className="container bg-dark" style={style.container}>
+					<div className="container bg-secondary" style={style.container}>
 						<div
 							className="d-flex justify-content-center gap-3 p-3 flex-wrap"
 							style={{ marginBottom: "auto" }}
@@ -208,6 +210,7 @@ function Modal({ show, closeModal, table, generalData }) {
 								table={table.teacherTable}
 								generalData={generalData}
 								heading="Teacher's table"
+								colorMap={table.colorMap}
 							/>
 						)}
 						{table && tableOptions === 2 && (
@@ -215,6 +218,7 @@ function Modal({ show, closeModal, table, generalData }) {
 								table={table.classTable}
 								generalData={generalData}
 								heading="Class's table"
+								colorMap={table.colorMap}
 							/>
 						)}
 					</div>
