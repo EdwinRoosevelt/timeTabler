@@ -15,7 +15,7 @@ export default function Home() {
 				/>
 				<meta name="keywords" content="easy, free, plot time tables"></meta>
 				<meta name="author" content="Edwin Roosevelt"></meta>
-				<link rel="icon" href="/T-logo2.png" />
+				<link rel="icon" href="/whiteCircle.png" />
 			</Head>
 
 			<MainPage />
