@@ -16,7 +16,7 @@ const EMPTYCLASSSUB = () => {
 		id: Math.random().toString(16).slice(8),
 		subjectName: "",
 		classId: "",
-		color: 0,
+		color: Math.floor(Math.random() * COLORS.length),
 	};
 };
 

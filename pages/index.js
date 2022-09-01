@@ -8,7 +8,7 @@ export default function Home() {
 		<div>
 			<Head>
 				<title>Timetabler</title>
-				<meta charset="UTF-8"></meta>
+				<meta charSet="UTF-8"></meta>
 				<meta
 					name="description"
 					content="Create easy, free, colorful timetables for all the classes, teachers and the entire school in minutes."
