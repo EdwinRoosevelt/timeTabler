@@ -6,7 +6,7 @@ const GENERALINFO = {
 const TEACHERSDATA = [
 	{
 		id: "9f0bd4b",
-		name: "Professor X",
+		name: "Mrs. Kavitha",
 		classSub: [
 			{
 				id: "121212",

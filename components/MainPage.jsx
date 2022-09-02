@@ -569,18 +569,26 @@ function MainPage() {
 							</div>
 						</div>
 						{/* <button className="btn bg-green w-100 mt-2">Add Teacher</button> */}
+						<p className="text-secondary p-2 d-block d-sm-none text-end">
+							{"<<< Swipe left <<<"}
+						</p>
 					</div>
 					<div className="" style={{ maxWidth: "500px" }}>
 						<div className="fs-2 p-3">
 							<span className="fs-2">Constrains</span>
-							{/* <button
-								className="btn btn-left btn-dark "
-								style={{ position: "relative", width: "100px", left: "-250px" }}
+							{/* <div
+								className="btn btn-left btn-dark d-block d-sm-none"
+								style={{
+									position: "absolute",
+									width: "100px",
+									left: "80vw",
+									top: "10px",
+								}}
 								disabled
 							>
 								{rightArrow}
 								{rightArrow}
-							</button> */}
+							</div> */}
 						</div>
 
 						<div
@@ -724,7 +732,7 @@ function MainPage() {
 															}
 														/>
 														<p className=" m-0 py-3 w-auto  px-2">
-															{"Atleast 1 first period in a week [for class teachers]"}
+															{"Atleast 1 first period in a week"}
 														</p>
 													</div>
 												</>

@@ -21,7 +21,7 @@ export default function Home() {
 
 			<MainPage />
 
-			<footer style={{ marginTop: "50px" }}>
+			<footer style={{ marginTop: "50px", marginBottom: "30px" }}>
 				<div className="container text-center ">
 					<hr></hr>
 					<div className="d-flex gap-2 justify-content-center align-items-center">

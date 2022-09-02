@@ -10,7 +10,6 @@
 		"e2e": "cypress open"
 	},
 	"dependencies": {
-		"cypress": "^10.7.0",
 		"jspdf": "^2.5.1",
 		"jspdf-autotable": "^3.5.25",
 		"next": "12.2.5",

@@ -110,6 +110,7 @@ function Modal({ show, closeModal, table, generalData }) {
 		doc.setFont("courier", "", "normal");
 
 		Object.entries(table).map((tableCategory) => {
+			if (tableCategory === "colorMap" || tableCategory === "resultStats") return;
 			Object.entries(table[tableCategory[0]]).map((content) => {
 				doc.text(`${tableCategory[0].toUpperCase()} - ${content[0]}`, 20, 40);
 				// setting head
@@ -174,7 +175,10 @@ function Modal({ show, closeModal, table, generalData }) {
 						<button className="btn bg-light" onClick={goBack}>
 							{backIcon} Back to Main page
 						</button>
-						<button className="btn btn-outline-dark px-3" onClick={handlePrint}>
+						<button
+							className="btn btn-outline-dark px-3 disabled"
+							onClick={handlePrint}
+						>
 							{pdfIcon} Download
 						</button>
 					</div>
