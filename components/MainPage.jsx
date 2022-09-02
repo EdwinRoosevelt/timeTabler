@@ -12,6 +12,7 @@ import {
 	COLORS,
 } from "../logic/data";
 import Modal from "./Modal";
+import GoogleAds from "./GoogleAds";
 
 const EMPTYCLASSSUB = () => {
 	return {
@@ -403,16 +404,12 @@ function MainPage() {
 			/>
 			<div className="container text-center p-3 my-4">
 				<div className="d-flex gap-2 justify-content-center align-items-center">
-					<Image
-						src={T1}
-						width="75px"
-						height="75px"
-						style={{ marginBottom: "10px" }}
-					/>
-					<h1 className="display-3">TimeTabler</h1>
+					<Image src={T1} width="70vw" height="70vw" />
+
+					<h1 className="display-3 mt-4">TimeTabler</h1>
 				</div>
 
-				<p>2 minutes time tables</p>
+				{/* <p>2 minutes time tables</p> */}
 			</div>
 
 			<div
@@ -424,14 +421,9 @@ function MainPage() {
 					marginRight: "auto",
 				}}
 			>
-				{/* <div
-					className="bg-light border text-center my-3 mx-3 p-5 adsbygoogle"
-					data-ad-client="ca-ca-pub-2846658205429325"
-					data-ad-slot="2846658205429325"
-					data-ad-format="auto"
-				>
-					Google Ads
-				</div> */}
+				<div className="bg-light border text-center my-3 mx-3 p-5">
+					<GoogleAds />
+				</div>
 
 				<div className="container my-3  gap-3 d-flex  justify-content-around">
 					<div>
