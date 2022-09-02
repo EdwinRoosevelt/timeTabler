@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { generateTimeTable } from "../logic";
+import Image from "next/image";
+import T1 from "../public/T1.png";
 // import styles from "./MainPage.module.css";
 
 // import { ButtonGroup, Button, TextField } from "@mui/material";
@@ -400,7 +402,16 @@ function MainPage() {
 				generalData={generalData}
 			/>
 			<div className="container text-center p-3 my-4">
-				<h1 className="display-3">TimeTabler</h1>
+				<div className="d-flex gap-2 justify-content-center align-items-center">
+					<Image
+						src={T1}
+						width="75px"
+						height="75px"
+						style={{ marginBottom: "10px" }}
+					/>
+					<h1 className="display-3">TimeTabler</h1>
+				</div>
+
 				<p>2 minutes time tables</p>
 			</div>
 
