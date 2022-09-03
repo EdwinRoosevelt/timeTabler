@@ -421,9 +421,9 @@ function MainPage() {
 					marginRight: "auto",
 				}}
 			>
-				<div className="bg-light border text-center my-3 mx-3 p-5">
+				{/* <div className="bg-light border text-center my-3 mx-3 p-5">
 					<GoogleAds />
-				</div>
+				</div> */}
 
 				<div className="container my-3  gap-3 d-flex  justify-content-around">
 					<div>

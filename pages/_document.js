@@ -14,17 +14,22 @@ export default function Document() {
 					href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap"
 					rel="stylesheet"
 				></link>
-			</Head>
-			<body>
-				<Main />
-				<NextScript />
-				<script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
-
 				<script
 					async
 					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2846658205429325"
 					crossOrigin="anonymous"
 				></script>
+			</Head>
+			<body>
+				<Main />
+				<NextScript />
+				{/* <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+				<script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2846658205429325"
+					crossOrigin="anonymous"
+				></script> */}
 			</body>
 		</Html>
 	);
