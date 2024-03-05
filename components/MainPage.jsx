@@ -460,7 +460,7 @@ function MainPage() {
 								// maxHeight: "400px",
 								border: "1px dotted grey",
 								scrollbarWidth: "thin",
-								scrollbarColor: "rebeccapurple green",
+								// scrollbarColor: "rebeccapurple green",
 								padding: "0.5rem",
 							}}
 						>
